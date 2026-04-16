@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P2P Process Implementation in SAP MM for BuildRight Construction</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 20mm 16mm 18mm 16mm;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        line-height: 1.5;
+        color: #111827;
+        margin: 0;
+        counter-reset: page;
+      }
+
+      .page {
+        page-break-after: always;
+        position: relative;
+      }
+
+      .page:last-child {
+        page-break-after: auto;
+      }
+
+      .footer {
+        position: fixed;
+        bottom: 8mm;
+        right: 16mm;
+        font-size: 10px;
+        color: #4b5563;
+      }
+
+      h1 {
+        font-size: 15px;
+        margin: 0 0 12px;
+        color: #0a4f94;
+      }
+
+      h2 {
+        font-size: 14px;
+        margin: 16px 0 8px;
+        color: #1f2937;
+      }
+
+      p,
+      li {
+        text-align: justify;
+      }
+
+      ul {
+        margin: 6px 0 10px 18px;
+        padding: 0;
+      }
+
+      .cover-box,
+      .info-box {
+        border: 1px solid #cfd8e3;
+        background: #f8fbfe;
+        border-radius: 6px;
+        padding: 12px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .meta-table,
+      .feature-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 8px;
+      }
+
+      .meta-table th,
+      .meta-table td,
+      .feature-table th,
+      .feature-table td {
+        border: 1px solid #d1d5db;
+        padding: 8px;
+        vertical-align: top;
+      }
+
+      .meta-table th,
+      .feature-table th {
+        background: #eef4fa;
+        text-align: left;
+      }
+
+      .screenshot {
+        width: 100%;
+        border: 1px solid #cfd8e3;
+        border-radius: 6px;
+        margin: 8px 0 4px;
+      }
+
+      .caption {
+        font-size: 10px;
+        color: #4b5563;
+        margin-bottom: 10px;
+      }
+
+      .small {
+        font-size: 11px;
+      }
+
+      .page-number:after {
+        content: counter(page);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="footer">Page <span class="page-number"></span></div>
+
+    <section class="page">
+      <div class="cover-box">
+        <h1>P2P Process Implementation in SAP MM for BuildRight Construction Pvt. Ltd.</h1>
+        <p>
+          This project demonstrates an industry-grade Procure-to-Pay implementation using an SAP MM inspired full-stack application for BuildRight Construction Pvt. Ltd. The solution models the complete purchasing lifecycle, starting with internal material demand and ending with vendor settlement, while enforcing commercial, inventory, and financial controls.
+        </p>
+      </div>
+
+      <h2>Problem Statement</h2>
+      <p>
+        BuildRight Construction Pvt. Ltd. procures structural steel rods and other raw materials for site execution. In a manual process, purchase requests can be duplicated, prices may not be compared effectively, goods receipts can remain untracked, and finance teams may process invoices without confirming actual material receipt. These issues lead to over-ordering, invoice mismatch, duplicate payment risk, and weak audit visibility. The project addresses these gaps by automating the complete P2P cycle through transaction-driven processing, document history, GR/IR accounting, and 3-way match control.
+      </p>
+
+      <h2>Solution Overview</h2>
+      <p>
+        The solution is built as a full working web application with a Python backend, SQLite persistence, and an SAP-style purchasing interface. It supports the core procurement flow of Purchase Requisition, Request for Quotation, Vendor Quotation, Purchase Order, Goods Receipt, Invoice Verification, and Vendor Payment. Every business event generates realistic document numbers, updates downstream process status, and records FI-style postings.
+      </p>
+
+      <table class="meta-table">
+        <tr>
+          <th>Company Code</th>
+          <td>BR01</td>
+          <th>Plant</th>
+          <td>BR01 (Delhi)</td>
+        </tr>
+        <tr>
+          <th>Purchasing Organization</th>
+          <td>BR10</td>
+          <th>Purchasing Group</th>
+          <td>BR1</td>
+        </tr>
+        <tr>
+          <th>Vendor</th>
+          <td>SteelCo Supplies Ltd.</td>
+          <th>Material</th>
+          <td>STL001 - Structural Steel Rods</td>
+        </tr>
+      </table>
+    </section>
+
+    <section class="page">
+      <h2>Solution Features</h2>
+      <table class="feature-table">
+        <tr>
+          <th>Process Step</th>
+          <th>Functionality Delivered</th>
+        </tr>
+        <tr>
+          <td>Purchase Requisition</td>
+          <td>Captures internal requirement for raw material with plant, quantity, and delivery data.</td>
+        </tr>
+        <tr>
+          <td>RFQ and Vendor Quotation</td>
+          <td>Records vendor enquiry and pricing data, supporting source determination and quotation comparison.</td>
+        </tr>
+        <tr>
+          <td>Purchase Order</td>
+          <td>Creates an external procurement commitment with company code, purchasing organization, vendor, price, and quantity.</td>
+        </tr>
+        <tr>
+          <td>Goods Receipt</td>
+          <td>Posts material receipt against PO, updates inventory value, and creates GR/IR accounting entries.</td>
+        </tr>
+        <tr>
+          <td>Invoice Verification</td>
+          <td>Verifies invoice quantity and value against PO and GR, and blocks payment if variance exists.</td>
+        </tr>
+        <tr>
+          <td>Vendor Payment</td>
+          <td>Clears vendor liability after successful invoice posting and records bank settlement.</td>
+        </tr>
+      </table>
+
+      <h2>Tech Stack</h2>
+      <div class="grid">
+        <div class="info-box">
+          <p class="small"><strong>Frontend:</strong> HTML5, CSS3, JavaScript</p>
+          <p class="small"><strong>Backend:</strong> Python 3.11 HTTP server</p>
+          <p class="small"><strong>Database:</strong> SQLite</p>
+          <p class="small"><strong>Architecture:</strong> REST-style API with persistent document storage</p>
+        </div>
+        <div class="info-box">
+          <p class="small"><strong>Business Domain:</strong> SAP MM Procure-to-Pay</p>
+          <p class="small"><strong>Integration Concept:</strong> MM-FI through GR/IR and vendor reconciliation entries</p>
+          <p class="small"><strong>Deployment:</strong> Localhost web application with ZIP and GitHub-ready source</p>
+        </div>
+      </div>
+
+      <h2>Unique Points</h2>
+      <ul>
+        <li>Implements the complete P2P lifecycle in one working application instead of static documentation only.</li>
+        <li>Highlights the 3-way match concept between Purchase Order, Goods Receipt, and Invoice quantity/value.</li>
+        <li>Shows FI integration by generating GR/IR, vendor reconciliation, and bank accounting entries.</li>
+        <li>Introduces a price variance control where invoice mismatch blocks payment for compliance.</li>
+        <li>Uses an SAP-style interface to improve realism for project demonstration and viva discussion.</li>
+      </ul>
+    </section>
+
+    <section class="page">
+      <h2>Application Screenshots</h2>
+      <img class="screenshot" src="assets/overview.png" alt="Overview screen" />
+      <div class="caption">Figure 1. SAP-style overview cockpit showing process status, metrics, and lifecycle monitor.</div>
+
+      <img class="screenshot" src="assets/transactions.png" alt="Transactions screen" />
+      <div class="caption">Figure 2. Transaction processing workspace for posting MM business documents.</div>
+
+      <img class="screenshot" src="assets/documents.png" alt="Documents screen" />
+      <div class="caption">Figure 3. Generated document list with procurement document numbers and business status.</div>
+    </section>
+
+    <section class="page">
+      <img class="screenshot" src="assets/postings.png" alt="Postings screen" />
+      <div class="caption">Figure 4. FI posting ledger showing accounting impact of GR, invoice, and payment postings.</div>
+
+      <img class="screenshot" src="assets/controls.png" alt="Controls screen" />
+      <div class="caption">Figure 5. 3-way match controls, variance monitoring, and quotation comparison workspace.</div>
+
+      <h2>Future Improvements</h2>
+      <ul>
+        <li>Add user login, approval workflow, and role-based authorization for requestor, buyer, stores, and finance users.</li>
+        <li>Include searchable document drill-down screens similar to SAP list display and ALV reporting.</li>
+        <li>Extend vendor evaluation with scorecards for price, lead time, quality, and service level.</li>
+        <li>Add dashboard analytics for spend by vendor, open liabilities, overdue deliveries, and blocked invoices.</li>
+        <li>Package the application with deployment scripts and cloud hosting support for team demonstration.</li>
+      </ul>
+
+      <h2>Conclusion</h2>
+      <p>
+        The completed solution demonstrates how SAP MM based procurement can be represented in a functional software project using realistic process flow, document generation, and accounting integration. By covering PR, RFQ, quotation, PO, GR, MIRO, and vendor payment with control logic and persistent storage, the project delivers both technical implementation value and strong business relevance for academic evaluation.
+      </p>
+    </section>
+  </body>
+</html>

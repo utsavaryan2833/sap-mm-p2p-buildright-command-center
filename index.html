@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BuildRight P2P Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/app.css" />
+  </head>
+  <body>
+    <div class="sap-shellbar">
+      <div class="shellbar-left">
+        <div class="shell-logo">BR</div>
+        <div>
+          <p class="shellbar-kicker">BuildRight Enterprise Suite</p>
+          <strong>Materials Management</strong>
+        </div>
+      </div>
+      <div class="shellbar-center">
+        <div class="shell-search">Global Search / Command</div>
+      </div>
+      <div class="shellbar-right">
+        <span class="shell-chip">Client 100</span>
+        <span class="shell-chip">System QAS</span>
+        <span class="shell-chip">User MM_PWR</span>
+      </div>
+    </div>
+
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">MM</div>
+          <div>
+            <p class="eyebrow">Transaction Launcher</p>
+            <h1>P2P Operations</h1>
+          </div>
+        </div>
+
+        <div class="company-card">
+          <p class="label">Current Organizational Context</p>
+          <h2>BuildRight Construction Pvt. Ltd.</h2>
+          <div class="company-meta">
+            <span>CoCd BR01</span>
+            <span>Plant BR01 Delhi</span>
+            <span>POrg BR10</span>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-link active" data-section="overview">Overview</button>
+          <button class="nav-link" data-section="master-data">Master Data</button>
+          <button class="nav-link" data-section="transactions">Transactions</button>
+          <button class="nav-link" data-section="documents">Documents</button>
+          <button class="nav-link" data-section="postings">FI Postings</button>
+          <button class="nav-link" data-section="controls">Controls</button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <p class="label">Simulation Status</p>
+          <div id="completionBadge" class="completion-badge">0% complete</div>
+          <button id="resetButton" class="ghost-button" type="button">Reset Demo Data</button>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Procure-to-Pay Full Purchasing Cycle</p>
+            <h2>ME2X Purchasing Command Center</h2>
+          </div>
+          <div class="topbar-actions">
+            <button id="seedButton" class="secondary-button" type="button">Load Guided Demo</button>
+            <button id="exportButton" class="primary-button" type="button">Export Project Snapshot</button>
+          </div>
+        </header>
+
+        <div id="systemBanner" class="system-banner neutral">Connecting to backend...</div>
+
+        <div class="context-strip">
+          <span>Application: Materials Management</span>
+          <span>Scenario: Procure-to-Pay</span>
+          <span>Currency: INR</span>
+          <span>Fiscal Variant: K4</span>
+        </div>
+
+        <section class="section active" id="overview">
+          <div class="hero-grid">
+            <div class="hero-card">
+              <p class="eyebrow">Work Overview</p>
+              <h3>Purchasing control with document flow, account determination, and invoice matching</h3>
+              <p>
+                This workspace simulates a full SAP MM Procure-to-Pay cycle for structural steel
+                procurement, including document creation, inventory postings, invoice verification,
+                and vendor settlement.
+              </p>
+              <div class="hero-points">
+                <span>PR to Payment</span>
+                <span>GR/IR Clearing</span>
+                <span>Invoice Block Logic</span>
+                <span>Document History</span>
+              </div>
+            </div>
+
+            <div class="spotlight-card">
+              <p class="label">Three-Way Match Status</p>
+              <div class="match-grid">
+                <div>
+                  <span>PO Qty</span>
+                  <strong id="overviewPoQty">0</strong>
+                </div>
+                <div>
+                  <span>GR Qty</span>
+                  <strong id="overviewGrQty">0</strong>
+                </div>
+                <div>
+                  <span>Invoice Qty</span>
+                  <strong id="overviewInvoiceQty">0</strong>
+                </div>
+              </div>
+              <p id="overviewMatchStatus" class="status-pill neutral">Awaiting transaction data</p>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <article class="stat-card">
+              <span class="label">Open Documents</span>
+              <strong id="docCount">0</strong>
+              <p>System-generated procurement and FI documents.</p>
+            </article>
+            <article class="stat-card">
+              <span class="label">Inventory Value</span>
+              <strong id="inventoryValue">INR 0</strong>
+              <p>Posted at goods receipt for stocked raw materials.</p>
+            </article>
+            <article class="stat-card">
+              <span class="label">Vendor Liability</span>
+              <strong id="vendorLiability">INR 0</strong>
+              <p>Recognized after invoice verification and cleared after payment.</p>
+            </article>
+            <article class="stat-card">
+              <span class="label">Payment Status</span>
+              <strong id="paymentStatus">Not posted</strong>
+              <p>Tracks whether vendor settlement is still open or complete.</p>
+            </article>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Process Flow</p>
+                <h3>P2P Lifecycle Monitor</h3>
+              </div>
+            </div>
+            <div id="timeline" class="timeline"></div>
+          </div>
+        </section>
+
+        <section class="section" id="master-data">
+          <div class="section-grid two-column">
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Enterprise Structure</p>
+                  <h3>Organizational Assignment</h3>
+                </div>
+              </div>
+              <div class="data-grid" id="orgData"></div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Core Masters</p>
+                  <h3>Vendor and Material</h3>
+                </div>
+              </div>
+              <div class="data-grid" id="masterData"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="transactions">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Transaction Processing</p>
+                <h3>Create and Post MM Documents</h3>
+              </div>
+              <p class="header-copy">
+                Each transaction posts to the backend, generates business documents, and updates downstream controls.
+              </p>
+            </div>
+
+            <div class="transaction-tabs">
+              <button class="txn-tab active" data-txn="pr">ME51N Purchase Requisition</button>
+              <button class="txn-tab" data-txn="rfq">ME41 RFQ</button>
+              <button class="txn-tab" data-txn="quotation">ME47 Quotation</button>
+              <button class="txn-tab" data-txn="po">ME21N Purchase Order</button>
+              <button class="txn-tab" data-txn="gr">MIGO Goods Receipt</button>
+              <button class="txn-tab" data-txn="invoice">MIRO Invoice</button>
+              <button class="txn-tab" data-txn="payment">F-53 Payment</button>
+            </div>
+
+            <div class="transaction-forms">
+              <form class="txn-form active" id="form-pr">
+                <div class="form-grid">
+                  <label>
+                    Material
+                    <input name="material" value="STL001" required />
+                  </label>
+                  <label>
+                    Description
+                    <input name="description" value="Structural Steel Rods" required />
+                  </label>
+                  <label>
+                    Quantity
+                    <input name="quantity" type="number" min="1" value="100" required />
+                  </label>
+                  <label>
+                    Plant
+                    <input name="plant" value="BR01" required />
+                  </label>
+                  <label>
+                    Purchase Group
+                    <input name="purchaseGroup" value="BR1" required />
+                  </label>
+                  <label>
+                    Delivery Date
+                    <input name="deliveryDate" type="date" value="2026-04-20" required />
+                  </label>
+                </div>
+                <button class="primary-button" type="submit">Create Requisition</button>
+              </form>
+
+              <form class="txn-form" id="form-rfq">
+                <div class="form-grid">
+                  <label>
+                    Vendor
+                    <input name="vendor" value="SteelCo Supplies Ltd." required />
+                  </label>
+                  <label>
+                    RFQ Deadline
+                    <input name="deadline" type="date" value="2026-04-21" required />
+                  </label>
+                  <label>
+                    Quantity
+                    <input name="quantity" type="number" min="1" value="100" required />
+                  </label>
+                  <label>
+                    Plant
+                    <input name="plant" value="BR01" required />
+                  </label>
+                  <label>
+                    Purchase Org
+                    <input name="purchaseOrg" value="BR10" required />
+                  </label>
+                  <label>
+                    Purchase Group
+                    <input name="purchaseGroup" value="BR1" required />
+                  </label>
+                </div>
+                <button class="primary-button" type="submit">Create RFQ</button>
+              </form>
+
+              <form class="txn-form" id="form-quotation">
+                <div class="form-grid">
+                  <label>
+                    Vendor
+                    <input name="vendor" value="SteelCo Supplies Ltd." required />
+                  </label>
+                  <label>
+                    Quoted Quantity
+                    <input name="quantity" type="number" min="1" value="100" required />
+                  </label>
+                  <label>
+                    Unit Price (INR)
+                    <input name="unitPrice" type="number" min="1" value="500" required />
+                  </label>
+                  <label>
+                    Freight (INR)
+                    <input name="freight" type="number" min="0" value="0" required />
+                  </label>
+                  <label>
+                    Lead Time (Days)
+                    <input name="leadTime" type="number" min="1" value="3" required />
+                  </label>
+                  <label>
+                    Payment Terms
+                    <input name="terms" value="30 Days Net" required />
+                  </label>
+                </div>
+                <button class="primary-button" type="submit">Record Quotation</button>
+              </form>
+
+              <form class="txn-form" id="form-po">
+                <div class="form-grid">
+                  <label>
+                    Vendor
+                    <input name="vendor" value="SteelCo Supplies Ltd." required />
+                  </label>
+                  <label>
+                    Material
+                    <input name="material" value="STL001" required />
+                  </label>
+                  <label>
+                    Quantity
+                    <input name="quantity" type="number" min="1" value="100" required />
+                  </label>
+                  <label>
+                    Unit Price (INR)
+                    <input name="unitPrice" type="number" min="1" value="500" required />
+                  </label>
+                  <label>
+                    Purchase Org
+                    <input name="purchaseOrg" value="BR10" required />
+                  </label>
+                  <label>
+                    Company Code
+                    <input name="companyCode" value="BR01" required />
+                  </label>
+                </div>
+                <button class="primary-button" type="submit">Create Purchase Order</button>
+              </form>
+
+              <form class="txn-form" id="form-gr">
+                <div class="form-grid">
+                  <label>
+                    PO Number
+                    <input name="poNumber" placeholder="Auto uses latest PO if left blank" />
+                  </label>
+                  <label>
+                    Received Quantity
+                    <input name="quantity" type="number" min="1" value="100" required />
+                  </label>
+                  <label>
+                    Storage Location
+                    <input name="storageLocation" value="0001" required />
+                  </label>
+                  <label>
+                    Movement Type
+                    <input name="movementType" value="101" required />
+                  </label>
+                  <label>
+                    Posting Date
+                    <input name="postingDate" type="date" value="2026-04-21" required />
+                  </label>
+                  <label>
+                    Batch Note
+                    <input name="batch" value="SITE-DELHI-01" required />
+                  </label>
+                </div>
+                <button class="primary-button" type="submit">Post Goods Receipt</button>
+              </form>
+
+              <form class="txn-form" id="form-invoice">
+                <div class="form-grid">
+                  <label>
+                    PO Number
+                    <input name="poNumber" placeholder="Auto uses latest PO if left blank" />
+                  </label>
+                  <label>
+                    Invoice Reference
+                    <input name="reference" value="SC-INV-2045" required />
+                  </label>
+                  <label>
+                    Invoice Quantity
+                    <input name="quantity" type="number" min="1" value="100" required />
+                  </label>
+                  <label>
+                    Invoice Amount (INR)
+                    <input name="amount" type="number" min="1" value="50000" required />
+                  </label>
+                  <label>
+                    Tax Amount (INR)
+                    <input name="tax" type="number" min="0" value="9000" required />
+                  </label>
+                  <label>
+                    Posting Date
+                    <input name="postingDate" type="date" value="2026-04-22" required />
+                  </label>
+                </div>
+                <button class="primary-button" type="submit">Post Invoice</button>
+              </form>
+
+              <form class="txn-form" id="form-payment">
+                <div class="form-grid">
+                  <label>
+                    Payment Method
+                    <select name="method">
+                      <option value="Manual Outgoing Payment">Manual Outgoing Payment</option>
+                      <option value="Automatic Payment Run">Automatic Payment Run</option>
+                    </select>
+                  </label>
+                  <label>
+                    Bank Account
+                    <input name="bankAccount" value="HDFC-BR01-OPERATIONS" required />
+                  </label>
+                  <label>
+                    Payment Amount (INR)
+                    <input name="amount" type="number" min="1" value="59000" required />
+                  </label>
+                  <label>
+                    Clearing Date
+                    <input name="postingDate" type="date" value="2026-04-23" required />
+                  </label>
+                </div>
+                <button class="primary-button" type="submit">Post Payment</button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="documents">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">System Output</p>
+                <h3>Generated Documents</h3>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Document Type</th>
+                    <th>Document Number</th>
+                    <th>Reference</th>
+                    <th>Status</th>
+                    <th>Created On</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody id="documentsTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="postings">
+          <div class="section-grid two-column">
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Accounting Impact</p>
+                  <h3>FI Posting Ledger</h3>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Doc</th>
+                      <th>Posting Key</th>
+                      <th>Debit</th>
+                      <th>Credit</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody id="postingsTable"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Exception Monitoring</p>
+                  <h3>Controls and Alerts</h3>
+                </div>
+              </div>
+              <div id="alertsPanel" class="alerts-panel"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="controls">
+          <div class="section-grid two-column">
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Compliance</p>
+                  <h3>3-Way Match Evaluation</h3>
+                </div>
+              </div>
+              <div id="controlsCard" class="controls-card"></div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Project Readiness</p>
+                  <h3>Evaluator Highlights</h3>
+                </div>
+              </div>
+              <ul class="highlights-list">
+                <li>Realistic SAP MM document flow from PR to vendor payment.</li>
+                <li>Automatic FI postings for GR, invoice, and payment transactions.</li>
+                <li>Live variance detection when invoice amount differs from PO value.</li>
+                <li>Audit-friendly document history for screenshots and viva explanation.</li>
+                <li>Professional interface suitable for demos, recordings, and project review.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Source Determination</p>
+                <h3>Quotation Comparison Workspace</h3>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Vendor</th>
+                    <th>Quoted Value</th>
+                    <th>Freight</th>
+                    <th>Lead Time</th>
+                    <th>Rank</th>
+                    <th>Decision</th>
+                  </tr>
+                </thead>
+                <tbody id="comparisonTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="timelineItemTemplate">
+      <article class="timeline-item">
+        <div class="timeline-marker"></div>
+        <div>
+          <div class="timeline-title-row">
+            <h4></h4>
+            <span class="timeline-status"></span>
+          </div>
+          <p class="timeline-code"></p>
+          <p class="timeline-meta"></p>
+        </div>
+      </article>
+    </template>
+
+    <script src="scripts/app.js"></script>
+  </body>
+</html>

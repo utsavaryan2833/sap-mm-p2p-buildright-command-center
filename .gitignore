@@ -1,0 +1,5 @@
+.dist/
+buildright_p2p.db
+__pycache__/
+*.pyc
+.venv/
